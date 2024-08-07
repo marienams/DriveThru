@@ -23,6 +23,10 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        PlayerMovement();
+        
+    }
+    void PlayerMovement(){
         //we will move forward our vehicle
         //horizontalInput = Input.GetAxis("Horizontal");
         //forwardInput = Input.GetAxis("Vertical");
@@ -37,6 +41,5 @@ public class PlayerController : MonoBehaviour
             mainCamera.enabled = !mainCamera.enabled;
             hoodCamera.enabled = !hoodCamera.enabled;
         }
-        
     }
 }
