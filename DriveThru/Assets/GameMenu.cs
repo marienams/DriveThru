@@ -20,4 +20,7 @@ public class GameMenu : MonoBehaviour
     public void PlayScene(){
         SceneManager.LoadScene(1);
     }
+    public void QuitGame() {
+        Application.Quit();
+    }
 }
