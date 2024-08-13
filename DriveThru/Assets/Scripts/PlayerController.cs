@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public static bool GameOverState 
+   {
+    get {return isGameOver;}
+    set {isGameOver=value;}
+    }
     
     [SerializeField]float speed = 5.0f;
     [SerializeField]float turnSpeed;
@@ -19,9 +24,7 @@ public class PlayerController : MonoBehaviour
     
     float forwardInput;
     bool IsToppledOver;
-    bool isGameOver;
-    
-
+    static bool isGameOver;
    
     // Start is called before the first frame update
     void Start()
@@ -34,14 +37,24 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        PlayerMovement();
-        PlayerOffTrack();
-        if(IsPlayerTilted() && !IsToppledOver){
-            IsToppledOver = true;
-            StartCoroutine(SnapBackToOriginalRotation());
+        if(!isGameOver){
+            PlayerMovement();
+            PlayerOffTrack();
+            if(IsPlayerTilted() && !IsToppledOver){
+                IsToppledOver = true;
+                StartCoroutine(SnapBackToOriginalRotation());
+            }
         }
+        else {
+            print("Game Over Menu");
+        }
+        
     }
-    void PlayerMovement(){
+
+    
+    void PlayerMovement()
+    {
+
         //we will move forward our vehicle
         //horizontalInput = Input.GetAxis("Horizontal");
         //forwardInput = Input.GetAxis("Vertical");
@@ -96,3 +109,4 @@ public class PlayerController : MonoBehaviour
         IsToppledOver = false;
     }
 }
+
