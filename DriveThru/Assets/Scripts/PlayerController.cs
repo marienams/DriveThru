@@ -5,15 +5,17 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     
-    public float speed = 5.0f;
-    public float turnSpeed;
-    public float horizontalInput;
+    [SerializeField]float speed = 5.0f;
+    [SerializeField]float turnSpeed;
+    float horizontalInput;
     
-    public float forwardInput;
+    float forwardInput;
     public Camera mainCamera;
     public Camera hoodCamera;
-    public KeyCode switchKey;
-    public string inputID; //for local multiplayer
+    KeyCode switchKey;
+    string inputID; //for local multiplayer
+
+    public float targetYPosition = -15.0f; // The Y position to check for
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +26,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         PlayerMovement();
-        
+        PlayerOffTrack();
     }
     void PlayerMovement(){
         //we will move forward our vehicle
@@ -40,6 +42,11 @@ public class PlayerController : MonoBehaviour
         {
             mainCamera.enabled = !mainCamera.enabled;
             hoodCamera.enabled = !hoodCamera.enabled;
+        }
+    }
+    void PlayerOffTrack(){
+        if(Mathf.Approximately(transform.position.y, targetYPosition)){
+            Debug.Log("Player fell over");
         }
     }
 }
