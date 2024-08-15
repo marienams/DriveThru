@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -46,7 +47,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         else {
-            print("Game Over Menu");
+            StartCoroutine(GameOver());
         }
         
     }
@@ -75,6 +76,7 @@ public class PlayerController : MonoBehaviour
             //Game ends if player falls off track
             isGameOver = true;
             Debug.Log("Player fell over");
+            StartCoroutine(GameOver());
         }
     }
 
@@ -82,7 +84,7 @@ public class PlayerController : MonoBehaviour
     {
         if(isGameOver){
             //returning false means snap back will not work
-            Debug.Log("Game Over: No snap back in place");
+            Debug.Log($"Game Over: {isGameOver}No snap back in place");
             return false;
         }
         float angleFromForward = Vector3.Angle(transform.up, Vector3.up);
@@ -108,5 +110,11 @@ public class PlayerController : MonoBehaviour
 
         IsToppledOver = false;
     }
+
+    IEnumerator GameOver(){
+        yield return new WaitForSeconds(delayBeforeReset);
+        SceneManager.LoadScene(2);
+    }
+
 }
 
