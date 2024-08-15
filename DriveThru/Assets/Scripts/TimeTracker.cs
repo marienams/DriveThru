@@ -20,8 +20,6 @@ public class TimeTracker : MonoBehaviour
     void Update()
     {
         Countdown();
-        
-
     }
 
     void Countdown()
