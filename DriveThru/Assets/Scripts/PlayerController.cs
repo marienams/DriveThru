@@ -67,9 +67,10 @@ public class PlayerController : NetworkBehaviour
         //transform.Rotate(Vector3.forward * Time.deltaTime * turnSpeed *horizontalInput);
         transform.Rotate(Vector3.up, Time.deltaTime * turnSpeed * horizontalInput);
 
-        if (Input.GetKeyDown(switchCameraKey))                        // condition to switch camera through key press
+        if (Input.GetKeyDown(switchCameraKey))                        
+        // condition to switch camera through key press
         {
-            mainCamera.enabled = !mainCamera.enabled;
+            //mainCamera.enabled = !mainCamera.enabled;
             hoodCamera.enabled = !hoodCamera.enabled;
         }
     }
