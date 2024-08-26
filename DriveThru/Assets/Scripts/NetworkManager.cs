@@ -24,7 +24,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (scene.IsValid) {
             sceneInfo.AddSceneRef(scene, LoadSceneMode.Additive);
         }
-
+        
         // Start or join (depends on gamemode) a session with a specific name
         await _runner.StartGame(new StartGameArgs()
         {
@@ -89,7 +89,36 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        Debug.Log("Event: OnInput");
+        //getting user input
+        // var data = new NetworkInputData();
+        // if(Input.GetAxis("vertical")!=0){
+        //     data.forwardInput = Input.GetAxis("vertical");
+        // }
+        
+        // data.direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        // //data.direction.y = Input.GetAxis("vertical");
+        // // map the camera switch button
+        // data.isCameraSwitched = Input.GetButtonDown("CameraSwitch");
+        
+        // input.Set(data);
+        var data = new NetworkInputData();
+
+        if (Input.GetKey(KeyCode.W)){
+            Debug.Log("W pressed");
+            data.direction += Vector3.forward;
+        }
+            
+
+        if (Input.GetKey(KeyCode.S))
+            data.direction += Vector3.back;
+
+        if (Input.GetKey(KeyCode.A))
+            data.direction += Vector3.left;
+
+        if (Input.GetKey(KeyCode.D))
+            data.direction += Vector3.right;
+
+        input.Set(data);
     }
 
     public void OnInputMissing(NetworkRunner runner, PlayerRef player, NetworkInput input)
@@ -109,14 +138,18 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("Event: OnPlayerJoined");
+        Debug.Log("Event: OnPlayerJoined" + runner.Mode);
+        
         if (runner.IsServer)
         {
             // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 1, 0);
+            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, 0f);
+            //Vector3 spawnPosition = new Vector3(6,5,0);
+            Debug.Log("Spawn position "+ spawnPosition);
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
+            
         }
     }
 

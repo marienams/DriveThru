@@ -679,7 +679,6 @@ GameObject:
   - component: {fileID: 1490997395}
   - component: {fileID: 1490997394}
   - component: {fileID: 1490997393}
-  - component: {fileID: 1490997396}
   - component: {fileID: 1490997397}
   m_Layer: 0
   m_Name: Main Camera
@@ -762,18 +761,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1490997396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1490997392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 457c1211320704a9691a12e8e8ffbc90, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1490997397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1088,7 +1075,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerPrefab:
-    RawGuidValue: 26f2643e77db6432bad8ea7ce91c4e56
+    RawGuidValue: c8bf3b8bff33245e68dd4aff5fa273d7
 --- !u!4 &1694127238
 Transform:
   m_ObjectHideFlags: 0
@@ -1465,7 +1452,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1694127237}
         m_TargetAssemblyTypeName: NetworkManager, Assembly-CSharp
-        m_MethodName: HostGame
+        m_MethodName: JoinGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FollowPlayer : MonoBehaviour
 {
-    public GameObject player;
-    private Vector3 offset = new Vector3(0,5,-7);
+    public Transform player;
+    public Vector3 offset = new Vector3(0,5,-7);
 
     public float followSpeed = 10f;  // Speed at which the camera follows the player
     public float rotateSpeed = 10f;  // Speed at which the camera rotates to match the player's rotation
@@ -24,12 +24,15 @@ public class FollowPlayer : MonoBehaviour
         //transform.position = player.transform.position + offset;
 
          // Follow player's position
-        Vector3 desiredPosition = player.transform.position + offset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
-        transform.position = smoothedPosition;
+         if(player!= null){
+            Vector3 desiredPosition = player.position + offset;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, followSpeed * Time.deltaTime);
+            transform.position = smoothedPosition;
 
-        // Follow player's rotation
-        Quaternion desiredRotation = Quaternion.Lerp(transform.rotation, player.transform.rotation, rotateSpeed * Time.deltaTime);
-        transform.rotation = desiredRotation;
+            // Follow player's rotation
+            Quaternion desiredRotation = Quaternion.Lerp(transform.rotation, player.transform.rotation, rotateSpeed * Time.deltaTime);
+            transform.rotation = desiredRotation;
+         }
+        
 }
 }
