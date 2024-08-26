@@ -1,7 +1,4 @@
-# DriveThru
-Prototype 1
-3D driver control game,
-Player controls,
-Scripting,
-Camera switch,
-local multi-player (working on it)
+# DriveThru (WIP)
+Multiplayer game
+Drive around, catch your friends before the timer
+The team with the most players left win!
