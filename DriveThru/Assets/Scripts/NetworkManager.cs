@@ -2,20 +2,31 @@ using System;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
+using static Fusion.NetworkBehaviour;
 
 public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkPrefabRef _playerPrefab;
+    [SerializeField] private TMP_InputField roomName;
+    [SerializeField] private TMP_Text warningMessage;
+    [SerializeField] private GameObject timeTracker;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    private NetworkRunner _runner;
+    public NetworkRunner _runner;
+    
+
 
     async void StartGame(GameMode mode)
     {
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
+
+        
 
         // Create the NetworkSceneInfo from the current scene
         //var scene = SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex);
@@ -29,15 +40,24 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         await _runner.StartGame(new StartGameArgs()
         {
             GameMode = mode,
-            SessionName = "TestRoom",
+            SessionName = $"{roomName.text}",
             Scene = scene,
             SceneManager = gameObject.AddComponent<NetworkSceneManagerDefault>()
         });
     }
     public void HostGame(){
+        Debug.Log("Room Name: " + roomName.text);
+        if(roomName.text == ""){
+            warningMessage.text = "Enter Room Name";
+            return;
+        }
         StartGame(GameMode.Host);
     }
     public void JoinGame(){
+        if(roomName.text == ""){
+            warningMessage.text = "Enter Room Name";
+            return;
+        }
         StartGame(GameMode.Client);
     }
     public void QuitGame() {
@@ -89,22 +109,11 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 
     public void OnInput(NetworkRunner runner, NetworkInput input)
     {
-        //getting user input
-        // var data = new NetworkInputData();
-        // if(Input.GetAxis("vertical")!=0){
-        //     data.forwardInput = Input.GetAxis("vertical");
-        // }
         
-        // data.direction = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        // //data.direction.y = Input.GetAxis("vertical");
-        // // map the camera switch button
-        // data.isCameraSwitched = Input.GetButtonDown("CameraSwitch");
-        
-        // input.Set(data);
         var data = new NetworkInputData();
 
         if (Input.GetKey(KeyCode.W)){
-            Debug.Log("W pressed");
+            
             data.direction += Vector3.forward;
         }
             
@@ -143,13 +152,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, 0f);
-            //Vector3 spawnPosition = new Vector3(6,5,0);
-            Debug.Log("Spawn position "+ spawnPosition);
+            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, (player.RawEncoded % runner.Config.Simulation.PlayerCount) * (-3));
+            // similar to instantiating a gameobject
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
-            
+
         }
     }
 
@@ -209,4 +217,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     {
         
     }
+    
+
+
 }

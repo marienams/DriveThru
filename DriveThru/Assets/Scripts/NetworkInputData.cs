@@ -6,6 +6,7 @@ using Fusion;
 public struct NetworkInputData :  INetworkInput
 {
     public Vector3 direction;
+    public float timeLeft;
      //sturcture to store user input
     // for moving ahead, vertical
     // public float forwardInput;
