@@ -13,10 +13,13 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
 {
     [SerializeField] private NetworkPrefabRef _playerPrefab;
     [SerializeField] private TMP_InputField roomName;
+    [SerializeField] private TMP_InputField playerName;
+    [SerializeField] private TextMeshProUGUI _playerNamePlaceholder = null;
     [SerializeField] private TMP_Text warningMessage;
-    [SerializeField] private GameObject timeTracker;
+   
+    [SerializeField] private PlayerData playerDataPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
-    public NetworkRunner _runner;
+    private NetworkRunner _runner;
     
 
 
@@ -51,6 +54,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             warningMessage.text = "Enter Room Name";
             return;
         }
+        SetPlayerData();
         StartGame(GameMode.Host);
     }
     public void JoinGame(){
@@ -58,8 +62,27 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             warningMessage.text = "Enter Room Name";
             return;
         }
+        SetPlayerData();
         StartGame(GameMode.Client);
     }
+
+    private void SetPlayerData()
+    {
+        var _playerData = FindObjectOfType<PlayerData>();
+        if(_playerData == null){
+            Debug.Log("Player data instantiated");
+            _playerData = Instantiate(playerDataPrefab);
+        }
+
+        if(string.IsNullOrWhiteSpace(playerName.text)){
+            _playerData.SetPlayerName(_playerNamePlaceholder.text);
+        }
+        else 
+        {
+            _playerData.SetPlayerName(playerName.text);
+        }
+    }
+
     public void QuitGame() {
         Application.Quit();
     }

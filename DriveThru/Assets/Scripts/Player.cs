@@ -10,6 +10,9 @@ public class Player : NetworkBehaviour
 {
     [Networked] 
     public float timeLeft {get;  set;}
+    [Networked]
+    public NetworkString<_16> NickName { get; private set; }
+
     public TMP_Text timeText;
     [SerializeField] float speed = 5f;
     [SerializeField] GameObject cameraPrefab;
@@ -35,10 +38,15 @@ public class Player : NetworkBehaviour
             Debug.Log("Server initiates the time");
             timeLeft = 120;
         }
-        else {
+        if(Object.HasInputAuthority) 
+        {
+            // waiting to get the timer value: FIX IT
             StartCoroutine(WaitForTimeSync());
+            // for getting player name from playerData.cs
+            var playerName = FindObjectOfType<PlayerData>().GetPlayerName();
+            RpcSetNickName(playerName);
         }
-        
+        // attaching local camera to local player, not networked
         if (Object.HasInputAuthority)
         {
             AttachCamera();
@@ -148,4 +156,12 @@ public class Player : NetworkBehaviour
         //timeText.text = "Time: " + string.Format("{0:00}:{1:00}",minutes,seconds);
         timeText.text = $"Time: {minutes:00}:{seconds:00}"; 
     }
+    // RPC used to send player information to the Host
+        [Rpc(sources: RpcSources.InputAuthority, targets: RpcTargets.StateAuthority)]
+        private void RpcSetNickName(string nickName)
+        {
+            if (string.IsNullOrEmpty(nickName)) return;
+            Debug.Log("RPC call for player "+nickName);
+            NickName = nickName;
+        }
 }
