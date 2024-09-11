@@ -145,10 +145,10 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             data.direction += Vector3.back;
 
         if (Input.GetKey(KeyCode.A))
-            data.direction += Vector3.left;
+            data.rotation += -1f;
 
         if (Input.GetKey(KeyCode.D))
-            data.direction += Vector3.right;
+            data.rotation += 1f;
 
         input.Set(data);
     }

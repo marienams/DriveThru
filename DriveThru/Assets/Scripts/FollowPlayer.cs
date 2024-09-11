@@ -30,6 +30,7 @@ public class FollowPlayer : MonoBehaviour
             transform.position = smoothedPosition;
 
             // Follow player's rotation
+            
             Quaternion desiredRotation = Quaternion.Lerp(transform.rotation, player.transform.rotation, rotateSpeed * Time.deltaTime);
             transform.rotation = desiredRotation;
          }

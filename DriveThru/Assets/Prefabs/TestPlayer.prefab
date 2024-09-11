@@ -111,9 +111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 363c4aa2475524764b54cefe23dae109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timeLeft: 0
+  _NickName:
+    _length: 0
+    _data:
+      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  timeText: {fileID: 0}
   speed: 500
+  offset: {x: -5, y: 5, z: -7}
   cameraPrefab: {fileID: 6261845904082201701, guid: f5bb2c6e14b3c4f318eb6a9434e867f9,
     type: 3}
+  playerOverview: {fileID: 0}
 --- !u!1001 &5777864081975009163
 PrefabInstance:
   m_ObjectHideFlags: 0

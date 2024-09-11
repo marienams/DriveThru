@@ -15,10 +15,14 @@ public class Player : NetworkBehaviour
 
     public TMP_Text timeText;
     [SerializeField] float speed = 5f;
+    public Vector3 offset = new Vector3(0,5,-7);
     [SerializeField] GameObject cameraPrefab;
+    [SerializeField] PlayerOverviewUI playerOverview = null;
     NetworkCharacterController networkCharacterController;
     private ChangeDetector _changeDetector;
     private bool IsTimeSync = false;
+    private float moveSpeed = 10f;
+    private float rotateSpeed = 10f;
     
     private void Awake() {
         
@@ -27,9 +31,7 @@ public class Player : NetworkBehaviour
         timeText = GameObject.Find("TimeText")?.GetComponent<TMP_Text>();
     }
 
-    private void Initialized(){
-        Debug.Log("Initialized called");
-    }
+    
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
@@ -44,6 +46,7 @@ public class Player : NetworkBehaviour
             StartCoroutine(WaitForTimeSync());
             // for getting player name from playerData.cs
             var playerName = FindObjectOfType<PlayerData>().GetPlayerName();
+            
             RpcSetNickName(playerName);
         }
         // attaching local camera to local player, not networked
@@ -52,6 +55,11 @@ public class Player : NetworkBehaviour
             AttachCamera();
             
         }
+        // displaying player stats
+        playerOverview = FindObjectOfType<PlayerOverviewUI>();
+        playerOverview.AddPlayer(Object.InputAuthority, this);
+        playerOverview.UpdatePlayerName(Object.InputAuthority, NickName.ToString());
+        
         
     }
 
@@ -69,8 +77,18 @@ public class Player : NetworkBehaviour
         if (GetInput(out NetworkInputData data))
         {
             //data.direction.Normalize();
-            networkCharacterController.Move(100*data.direction*Runner.DeltaTime);
+            //networkCharacterController.Move(100*data.direction*Runner.DeltaTime);
+            // Apply movement based on direction input
+            Vector3 movement = data.direction.normalized * moveSpeed * Runner.DeltaTime;
+            transform.position += transform.forward * movement.z;
+
+            // Apply rotation based on rotation input
+            if (data.rotation != 0)
+            {
+                transform.Rotate(0, data.rotation * rotateSpeed * Runner.DeltaTime, 0);
+            }
         }
+        
         if(Runner.IsServer){
             Debug.Log("Server calls Countdown");
             Countdown();
@@ -89,14 +107,23 @@ public class Player : NetworkBehaviour
             //         DisplayTime();
             //         break;
             // }
-            if (change == nameof(timeLeft))
-            {
-                Debug.Log("TimeLeft changed: " + timeLeft);
+            // if (change == nameof(timeLeft))
+            // {
+            //     Debug.Log("TimeLeft changed: " + timeLeft);
 
-                // Mark that the timeLeft has been synchronized for the client
-                IsTimeSync = true;
-                DisplayTime();
+            //     // Mark that the timeLeft has been synchronized for the client
+            //     IsTimeSync = true;
+            //     DisplayTime();
                 
+            // }
+            switch(change)
+            {
+                case nameof(NickName):
+                    playerOverview.UpdatePlayerName(Object.InputAuthority, NickName.ToString());
+                    break;
+                case nameof(timeLeft):
+                    DisplayTime();
+                    break;
             }
         }
     }
@@ -104,19 +131,20 @@ public class Player : NetworkBehaviour
     
     void AttachCamera(){
         // Instantiate the camera prefab
-            GameObject playerCamera = Instantiate(cameraPrefab);
+
+            GameObject playerCamera = Instantiate(cameraPrefab, this.transform);
 
             // Set the camera's position and parent it to the player
             playerCamera.transform.SetParent(transform);
-            playerCamera.transform.localPosition = new Vector3(0, 5, -10); // Adjust this offset as needed
-            playerCamera.transform.localRotation = Quaternion.identity;
+            playerCamera.transform.localPosition = transform.position + new Vector3(0, 5, -10); // Adjust this offset as needed
+            playerCamera.transform.localRotation = transform.rotation;
 
             // Ensure the camera follows the player
-            FollowPlayer cameraFollow = playerCamera.GetComponent<FollowPlayer>();
-            if (cameraFollow != null)
-            {
-                cameraFollow.player = transform;
-            }
+            // FollowPlayer cameraFollow = playerCamera.GetComponent<FollowPlayer>();
+            // if (cameraFollow != null)
+            // {
+            //     cameraFollow.player = transform;
+            // }
     }
     
     void Countdown(){
@@ -164,4 +192,6 @@ public class Player : NetworkBehaviour
             Debug.Log("RPC call for player "+nickName);
             NickName = nickName;
         }
+
+        
 }
