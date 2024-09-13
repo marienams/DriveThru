@@ -14,15 +14,15 @@ public class Player : NetworkBehaviour
     public NetworkString<_16> NickName { get; private set; }
 
     public TMP_Text timeText;
-    [SerializeField] float speed = 5f;
-    public Vector3 offset = new Vector3(0,5,-7);
+    [SerializeField] float moveSpeed = 10f;
+    [SerializeField] float rotateSpeed = 10f;
+    public Vector3 offset = new Vector3(0,3,-10);
     [SerializeField] GameObject cameraPrefab;
     [SerializeField] PlayerOverviewUI playerOverview = null;
     NetworkCharacterController networkCharacterController;
     private ChangeDetector _changeDetector;
     private bool IsTimeSync = false;
-    private float moveSpeed = 10f;
-    private float rotateSpeed = 10f;
+    
     
     private void Awake() {
         
@@ -136,7 +136,7 @@ public class Player : NetworkBehaviour
 
             // Set the camera's position and parent it to the player
             playerCamera.transform.SetParent(transform);
-            playerCamera.transform.localPosition = transform.position + new Vector3(0, 5, -10); // Adjust this offset as needed
+            playerCamera.transform.localPosition = transform.position + offset; // Adjust this offset as needed
             playerCamera.transform.localRotation = transform.rotation;
 
             // Ensure the camera follows the player

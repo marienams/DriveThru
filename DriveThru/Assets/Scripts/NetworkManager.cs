@@ -175,7 +175,12 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         if (runner.IsServer)
         {
             // Create a unique position for the player
-            Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, (player.RawEncoded % runner.Config.Simulation.PlayerCount) * (-3));
+            // Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, (player.RawEncoded % runner.Config.Simulation.PlayerCount) * (-3));
+            float xPosition = 0f; // Constant x position
+            float yPosition = 5.0f; // Constant y position
+            float zPosition = player.RawEncoded * 3f; // Varying z position with 3 units difference
+
+            Vector3 spawnPosition = new Vector3(xPosition, yPosition, zPosition);
             // similar to instantiating a gameobject
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
