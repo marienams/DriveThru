@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 7357999140238282490}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.9999999, y: 2.4184747, z: 0.7877183}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -53,7 +53,7 @@ CharacterController:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Height: 0.2
   m_Radius: 2
@@ -61,7 +61,7 @@ CharacterController:
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 2, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &8966247683423581848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -111,17 +111,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 363c4aa2475524764b54cefe23dae109, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 30
+  rotateSpeed: 35
+  offset: {x: 0, y: 4, z: -15}
+  cameraPrefab: {fileID: 6261845904082201701, guid: f5bb2c6e14b3c4f318eb6a9434e867f9,
+    type: 3}
   _timeLeft: 0
   _NickName:
     _length: 0
     _data:
       Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
   timeText: {fileID: 0}
-  speed: 500
-  offset: {x: -5, y: 5, z: -7}
-  cameraPrefab: {fileID: 6261845904082201701, guid: f5bb2c6e14b3c4f318eb6a9434e867f9,
-    type: 3}
-  playerOverview: {fileID: 0}
 --- !u!1001 &5777864081975009163
 PrefabInstance:
   m_ObjectHideFlags: 0

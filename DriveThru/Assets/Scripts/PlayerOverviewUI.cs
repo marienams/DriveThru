@@ -9,10 +9,10 @@ using UnityEngine;
 public class PlayerOverviewUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _playerOverviewEntryPrefab = null;
+    [SerializeField] private GameObject _playerOverviewExitPrefab = null;
     private Dictionary<PlayerRef, TextMeshProUGUI> _playerListEntries = new Dictionary<PlayerRef, TextMeshProUGUI>();
     private Dictionary<PlayerRef, string> _playerNickNames = new Dictionary<PlayerRef, string>();
-    private Dictionary<PlayerRef, Color> _playerUIColor = new Dictionary<PlayerRef, Color>();
-    private Vector3 lastSpawnPosition ; 
+    
     
     public void AddPlayer(PlayerRef playerRef, Player player){
 
@@ -51,6 +51,27 @@ public class PlayerOverviewUI : MonoBehaviour
         Debug.Log("Setting name to UI in UpdatePlayerList " + name);
         ui.text = $"{name}";
         
+
+    }
+    public void RemoveEntry(PlayerRef playerRef)
+        {
+            if (_playerListEntries.TryGetValue(playerRef, out var entry) == false) return;
+
+            if (entry != null)
+            {
+                Destroy(entry.gameObject);
+            }
+
+            _playerNickNames.Remove(playerRef);
+
+            _playerListEntries.Remove(playerRef);
+            
+            
+        }
+    public void DisplayEndingScreen(PlayerRef playerRef)
+    {
+        
+        _playerOverviewExitPrefab.SetActive(true);
 
     }
 
