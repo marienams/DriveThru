@@ -20,7 +20,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
     [SerializeField] private PlayerData playerDataPrefab;
     private Dictionary<PlayerRef, NetworkObject> _spawnedCharacters = new Dictionary<PlayerRef, NetworkObject>();
     private NetworkRunner _runner;
-    
+    PlayerOverviewUI _playerOverview;
 
 
     async void StartGame(GameMode mode)
@@ -28,7 +28,7 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
         // Create the Fusion runner and let it know that we will be providing user input
         _runner = gameObject.AddComponent<NetworkRunner>();
         _runner.ProvideInput = true;
-
+        _playerOverview = FindObjectOfType<PlayerOverviewUI>();
         
 
         // Create the NetworkSceneInfo from the current scene
@@ -82,6 +82,8 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             _playerData.SetPlayerName(playerName.text);
         }
     }
+
+    
 
     public void QuitGame() {
         Application.Quit();
@@ -139,8 +141,6 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             
             data.direction += Vector3.forward;
         }
-            
-
         if (Input.GetKey(KeyCode.S))
             data.direction += Vector3.back;
 
@@ -177,14 +177,16 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
             // Create a unique position for the player
             // Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * 3, 3f, (player.RawEncoded % runner.Config.Simulation.PlayerCount) * (-3));
             float xPosition = 0f; // Constant x position
-            float yPosition = 5.0f; // Constant y position
+            float yPosition = 1.5f; // Constant y position
             float zPosition = player.RawEncoded * 3f; // Varying z position with 3 units difference
 
             Vector3 spawnPosition = new Vector3(xPosition, yPosition, zPosition);
+            Debug.Log("Spawn Position " + spawnPosition );
             // similar to instantiating a gameobject
             NetworkObject networkPlayerObject = runner.Spawn(_playerPrefab, spawnPosition, Quaternion.identity, player);
             // Keep track of the player avatars for easy access
             _spawnedCharacters.Add(player, networkPlayerObject);
+            // _playerOverview.RemoveEntry(player);
 
         }
     }
@@ -195,7 +197,9 @@ public class NetworkManager : MonoBehaviour, INetworkRunnerCallbacks
        if (_spawnedCharacters.TryGetValue(player, out NetworkObject networkObject))
         {
             runner.Despawn(networkObject);
+            //remove player avatar from the list
             _spawnedCharacters.Remove(player);
+
         }
     }
 
