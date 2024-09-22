@@ -5,13 +5,16 @@ using System.ComponentModel;
 using Fusion;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerOverviewUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _playerOverviewEntryPrefab = null;
-    [SerializeField] private GameObject _playerOverviewExitPrefab = null;
+    
     private Dictionary<PlayerRef, TextMeshProUGUI> _playerListEntries = new Dictionary<PlayerRef, TextMeshProUGUI>();
     private Dictionary<PlayerRef, string> _playerNickNames = new Dictionary<PlayerRef, string>();
+    
     
     
     public void AddPlayer(PlayerRef playerRef, Player player){
@@ -68,12 +71,17 @@ public class PlayerOverviewUI : MonoBehaviour
             
             
         }
-    public void DisplayEndingScreen(PlayerRef playerRef)
+    public void ClearEntries(PlayerRef playerRef, string name)
     {
         
-        _playerOverviewExitPrefab.SetActive(true);
+        //_playerOverviewExitPrefab.SetActive(true);
+        
+        _playerNickNames.Clear();
+        _playerListEntries.Clear();
 
     }
+   
+   
 
 
 }

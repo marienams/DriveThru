@@ -28,17 +28,20 @@ public class Player : NetworkBehaviour
     NetworkCharacterController networkCharacterController;
     private ChangeDetector _changeDetector;
     //NetworkRunner runner;
-    NetworkManager _networkManager;
+    
     //---------------------------GOAL
+    [SerializeField] private TextMeshPro _playerOverviewExitPrefab = null;
     [Networked]
     public bool isGoalComplete{ get; private set; }
+    NetworkedTimeTracker _timetracker;
+    
     private void Awake() {
         
         
         networkCharacterController = GetComponent<NetworkCharacterController>();
         timeText = GameObject.Find("TimeText")?.GetComponent<TMP_Text>();
         //runner = FindObjectOfType<NetworkRunner>();
-        _networkManager = FindObjectOfType<NetworkManager>();
+        
         
     }
 
@@ -46,6 +49,7 @@ public class Player : NetworkBehaviour
     public override void Spawned()
     {
         _changeDetector = GetChangeDetector(ChangeDetector.Source.SimulationState);
+        _timetracker = FindObjectOfType<NetworkedTimeTracker>();
         isGoalComplete = false;
         //initialize timer value
         if(Runner.IsServer){
@@ -58,7 +62,7 @@ public class Player : NetworkBehaviour
             StartCoroutine(WaitForTimeSync());
             // for getting player name from playerData.cs
             var playerName = FindObjectOfType<PlayerData>().GetPlayerName();
-            
+            //set player nick name through remote procedure call
             RpcSetNickName(playerName);
         }
         // attaching local camera to local player, not networked
@@ -81,11 +85,11 @@ public class Player : NetworkBehaviour
         yield return new WaitForSeconds(5f);
     }
 
-    public override void FixedUpdateNetwork()
-    {
-        Movement();
+    // public override void FixedUpdateNetwork()
+    // {
+    //     Movement();
         
-    }
+    // }
 
     void Movement(){
         if (GetInput(out NetworkInputData data))
@@ -104,7 +108,8 @@ public class Player : NetworkBehaviour
         }
     }
     
-    private void Update() {
+    public override void FixedUpdateNetwork() {
+        Movement();
         //Detect changes to the timeLeft networked var
         foreach (var change in _changeDetector.DetectChanges(this))
         {
@@ -119,10 +124,11 @@ public class Player : NetworkBehaviour
                     break;
                 case nameof(isGoalComplete):
                     //Remove Entries when a player wins
-                    playerOverview.DisplayEndingScreen(Object.InputAuthority);
+                    playerOverview.ClearEntries(Object.InputAuthority, NickName.ToString());
                     break;
             }
         }
+        
     }
     private void OnTriggerEnter(Collider other) {
         Debug.Log("Collision detected");
@@ -131,29 +137,25 @@ public class Player : NetworkBehaviour
         //detecting goal collision
         if(Object.HasInputAuthority && other.CompareTag("Goal") && !goalBehaviour._hasReached){
             Debug.Log("Goal detected");
-            isGoalComplete = true;
+            
             goalBehaviour._hasReached = true;
 
             RPCreachedGoal();
+            if(_timetracker == null) {Debug.Log("Time tracker instance empty"); return;}
+            _timetracker.GameHasEnded(NickName.ToString(), isGoalComplete);
         }
     }
     
     void AttachCamera(){
         // Instantiate the camera prefab
 
-            GameObject playerCamera = Instantiate(cameraPrefab, this.transform);
+        GameObject playerCamera = Instantiate(cameraPrefab, this.transform);
 
-            // Set the camera's position and parent it to the player
-            playerCamera.transform.SetParent(transform);
-            playerCamera.transform.localPosition = transform.position + offset; // Adjust this offset as needed
-            playerCamera.transform.localRotation = transform.rotation;
+        // Set the camera's position and parent it to the player
+        playerCamera.transform.SetParent(transform);
+        playerCamera.transform.localPosition = transform.position + offset; // Adjust this offset as needed
+        playerCamera.transform.localRotation = transform.rotation;
 
-            // Ensure the camera follows the player
-            // FollowPlayer cameraFollow = playerCamera.GetComponent<FollowPlayer>();
-            // if (cameraFollow != null)
-            // {
-            //     cameraFollow.player = transform;
-            // }
     }
     
     void Countdown(){
@@ -207,8 +209,10 @@ public class Player : NetworkBehaviour
     {
         //Debug.Log($"{NickName} has reached the goal!");
         isGoalComplete = true;
-        // Runner.Shutdown();
+        
         // Add further game logic here, like ending the game or progressing to the next level
         
     }
+
+    
 }
