@@ -11,6 +11,7 @@ using UnityEngine.SceneManagement;
 public class PlayerOverviewUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _playerOverviewEntryPrefab = null;
+    [SerializeField] private TextMeshProUGUI _playerEXITPrefab = null;
     
     private Dictionary<PlayerRef, TextMeshProUGUI> _playerListEntries = new Dictionary<PlayerRef, TextMeshProUGUI>();
     private Dictionary<PlayerRef, string> _playerNickNames = new Dictionary<PlayerRef, string>();
@@ -80,8 +81,14 @@ public class PlayerOverviewUI : MonoBehaviour
         _playerListEntries.Clear();
 
     }
-   
-   
+
+    public void DisplayEndScreen(PlayerRef playerRef, string winner){
+        Debug.Log("Goal UI set active");
+        _playerEXITPrefab.gameObject.SetActive(true);
+        _playerEXITPrefab.text = $"{winner} won!";
+    }
+
+
 
 
 }
