@@ -30,7 +30,7 @@ public class Player : NetworkBehaviour
     //NetworkRunner runner;
     
     //---------------------------GOAL
-    [SerializeField] private TextMeshPro _playerOverviewExitPrefab = null;
+    [SerializeField] private TextMeshProUGUI _playerExitUI = null;
     [Networked]
     public bool isGoalComplete{ get; private set; }
     NetworkedTimeTracker _timetracker;
@@ -124,25 +124,27 @@ public class Player : NetworkBehaviour
                     break;
                 case nameof(isGoalComplete):
                     //Remove Entries when a player wins
-                    playerOverview.ClearEntries(Object.InputAuthority, NickName.ToString());
+                    Debug.Log("Goal var change detected");
+                    
+                    
                     break;
             }
         }
         
     }
     private void OnTriggerEnter(Collider other) {
-        Debug.Log("Collision detected");
+        
         var goalBehaviour = other.GetComponent<GoalBehaviour>();
         
         //detecting goal collision
         if(Object.HasInputAuthority && other.CompareTag("Goal") && !goalBehaviour._hasReached){
-            Debug.Log("Goal detected");
-            
-            goalBehaviour._hasReached = true;
-
+            Debug.Log("Goal triggered");
+            // goalBehaviour._hasReached = true;
+            isGoalComplete = true;
+            // playerOverview.DisplayEndScreen();
             RPCreachedGoal();
-            if(_timetracker == null) {Debug.Log("Time tracker instance empty"); return;}
-            _timetracker.GameHasEnded(NickName.ToString(), isGoalComplete);
+            // if(_timetracker == null) {Debug.Log("Time tracker instance empty"); return;}
+            // _timetracker.GameHasEnded(NickName.ToString(), isGoalComplete);
         }
     }
     
@@ -204,14 +206,30 @@ public class Player : NetworkBehaviour
             NickName = nickName;
         }
 
-    [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+    [Rpc(RpcSources.All, RpcTargets.All)]
     private void RPCreachedGoal()
     {
         //Debug.Log($"{NickName} has reached the goal!");
         isGoalComplete = true;
+        // Debug.Log("Goal status RPC communicated");
+        // playerOverview.UpdateEndScreen(NickName.ToString());
         
         // Add further game logic here, like ending the game or progressing to the next level
-        
+        playerOverview.DisplayEndScreen(Object.InputAuthority,NickName.ToString());
+    }
+
+    public void Restart(){
+        var runner = FindObjectOfType<NetworkRunner>();
+        if (runner.IsServer)
+        {
+            // Shutdown the NetworkRunner and stop the session
+            runner.Shutdown();
+            Debug.Log("Runner shut down.");
+        }
+        else
+        {
+            Debug.Log("Only the server can shutdown the session.");
+        }
     }
 
     
