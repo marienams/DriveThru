@@ -14,22 +14,25 @@ public class ObstacleSpawner : NetworkBehaviour
 
     private List<NetworkId> _obstacles = new List<NetworkId>();
     private TickTimer _spawnDelay;
+    GoalBehaviour goalReached;
     public override void FixedUpdateNetwork()
     {
         
         SpawnObstacles();
+        goalReached = FindObjectOfType<GoalBehaviour>();
     }
 
     void SpawnObstacles()
     {
         //if the ticker is not expired, it won't spawn an obstacle vehicle
         if (_spawnDelay.Expired(Runner) == false) return;
-
+        //if(goalReached._hasReached == true) Debug.Log("Stop obstacle spawning"); return;
         
         int x = Random.Range(-140,140);
         int z = Random.Range(0,200);
+        int yAngle = Random.Range(90,270);
         Vector3 position = new Vector3(x, 6f, z);
-        Quaternion rotation = Quaternion.Euler(0,180,0);
+        Quaternion rotation = Quaternion.Euler(0,yAngle,0);
         // var obstacle = Runner.Spawn(obstaclePrefab, position);
         // Debug.Log("New Obstacle Position "+ obstacle.transform.position);
         // _obstacles.Add(obstacle);
