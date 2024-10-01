@@ -225,8 +225,9 @@ GameObject:
   - component: {fileID: 3148694270328940184}
   - component: {fileID: 6618622892699103964}
   - component: {fileID: 960850905117143194}
-  - component: {fileID: 4241367681576441658}
   - component: {fileID: 5675417121822940258}
+  - component: {fileID: 2201846553073091102}
+  - component: {fileID: -6487844337098393003}
   m_Layer: 0
   m_Name: ObstacleVehicle
   m_TagString: Untagged
@@ -353,19 +354,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &4241367681576441658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4824046673255479234}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc7879bf4b9984c80b492d285a1262f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 10
 --- !u!114 &5675417121822940258
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -382,7 +370,38 @@ MonoBehaviour:
   ObjectInterest: 1
   Flags: 262145
   NestedObjects: []
-  NetworkedBehaviours: []
+  NetworkedBehaviours:
+  - {fileID: 2201846553073091102}
+  - {fileID: -6487844337098393003}
+--- !u!114 &2201846553073091102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4824046673255479234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac27374c69644f25acb9152ce20498a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+--- !u!114 &-6487844337098393003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4824046673255479234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &5619399582059286783
 GameObject:
   m_ObjectHideFlags: 0
