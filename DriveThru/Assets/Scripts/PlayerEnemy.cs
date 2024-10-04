@@ -1,19 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Fusion;
 
 public class PlayerEnemy : MonoBehaviour
 {
-    public float speed = 10.0f;
-    // Start is called before the first frame update
-    void Start()
-    {
+    // public float speed = 10.0f;
+    // // Start is called before the first frame update
+    // void Start()
+    // {
         
-    }
+    // }
 
-    // Update is called once per frame
-    void Update()
-    {
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
-    }
+    // // Update is called once per frame
+    // void Update()
+    // {
+    //     transform.Translate(Vector3.forward * Time.deltaTime * speed);
+    // }
 }

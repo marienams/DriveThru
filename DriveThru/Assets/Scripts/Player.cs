@@ -75,7 +75,15 @@ public class Player : NetworkBehaviour
         playerOverview = FindObjectOfType<PlayerOverviewUI>();
         playerOverview.AddPlayer(Object.InputAuthority, this);
         playerOverview.UpdatePlayerName(Object.InputAuthority, NickName.ToString());
+        if(Runner.IsServer){
+            //only spawn goal if the host is doing it, not a client
+            FindObjectOfType<GoalSpawner>().SpawnGoal();
+        }
+        
         isGoalComplete = FindAnyObjectByType<GoalBehaviour>()._hasReached;
+
+        FindObjectOfType<ObstacleSpawner>().SetSpawnDelay();
+        
         
     }
 
